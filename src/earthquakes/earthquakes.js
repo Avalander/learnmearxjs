@@ -6,6 +6,12 @@ import { map, flatMap, retry, distinct } from 'rxjs/operators'
 
 const QUAKE_URL = 'http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojsonp'
 
+/**
+ * Improvements:
+ * - When the user hovers the mouse over an earthquake, offer a pop up that shows more information about that particular quake.
+ * - Implement a counter at the top of the page that shows the number of earthquakes so far today and resets every day.
+ */
+
 /*
 const loadJsonp = url => {
 	const script = document.createElement('script')
