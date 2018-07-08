@@ -1,11 +1,12 @@
 import L from 'leaflet'
 
-import { Observable } from 'rxjs'
-import { map } from 'rxjs/operators'
+import { Observable, from, interval } from 'rxjs'
+import { map, flatMap, retry, distinct } from 'rxjs/operators'
 
 
 const QUAKE_URL = 'http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojsonp'
 
+/*
 const loadJsonp = url => {
 	const script = document.createElement('script')
 	script.type = 'text/javascript'
@@ -13,6 +14,56 @@ const loadJsonp = url => {
 
 	const head = document.querySelector('head')
 	head.appendChild(script)
+}
+
+const quakes$ =
+	Observable.create(observer => {
+		window.eqfeed_callback = response => {
+			observer.next(response)
+			observer.complete()
+		}
+		loadJsonp(QUAKE_URL)
+	}).pipe(
+		flatMap(({ features }) => from(features))
+	)
+*/
+
+const loadJSONP = ({ url, callback_name }) => {
+	const script = document.createElement('script')
+	script.type = 'text/javascript'
+	script.src = url
+
+	window[callback_name] = data =>
+		window[callback_name].data = data
+	
+	return Observable.create(observer => {
+		const handler = event => {
+			const status = event.type === 'error' ? 400 : 200
+			const response = window[callback_name].data
+
+			if (status === 200) {
+				observer.next({
+					status,
+					responseType: 'jsonp',
+					response,
+					originalEvent: event,
+				})
+				observer.complete()
+			}
+			else {
+				observer.error({
+					type: 'error',
+					status,
+					originalEvent: event,
+				})
+			}
+		}
+
+		script.onload = script.onreadystatechanged = script.onerror = handler
+
+		const head = document.querySelector('head')
+		head.insertBefore(script, head.firstChild)
+	})
 }
 
 const map_container = document.createElement('div')
@@ -24,11 +75,20 @@ L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map_view)
 
 
 const quakes$ =
-	Observable.create(observer => {
-		window.eqfeed_callback = response =>
-			response.features.forEach(x => observer.next(x))
-		loadJsonp(QUAKE_URL)
-	})
+	interval(5000)
+		.pipe(
+			flatMap(() =>
+				loadJSONP({
+					url: QUAKE_URL,
+					callback_name: 'eqfeed_callback'
+				})
+				.pipe(
+					retry(3)
+				)
+			),
+			flatMap(({ response }) => from(response.features)),
+			distinct(quake => quake.properties.code),
+		)
 
 quakes$
 	.pipe(
