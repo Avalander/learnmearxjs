@@ -6,13 +6,20 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const folders = {
 	src: path.resolve(__dirname, 'src'),
 	dist: path.resolve(__dirname, 'dist'),
-
 }
+
+const htmlFile = name =>
+	new HtmlWebpackPlugin({
+		template: path.join(folders.src, name, 'index.html'),
+		filename: `${name}.html`,
+		chunks: [ name ],
+	})
 
 module.exports = {
 	entry: {
 		'hello-world': path.resolve(folders.src, 'hello-world', 'hello-world.js'),
 		'handle-errors': path.resolve(folders.src, 'handle-errors', 'handle-errors.js'),
+		'earthquakes': path.resolve(folders.src, 'earthquakes', 'earthquakes.js'),
 	},
 	output: {
 		path: folders.dist,
@@ -39,15 +46,13 @@ module.exports = {
 	},
 	plugins: [
 		new HtmlWebpackPlugin({
-			template: path.join(folders.src, 'hello-world', 'index.html'),
-			filename: 'hello-world.html',
-			chunks: [ 'hello-world' ],
+			template: path.join(folders.src, 'index.html'),
+			filename: 'index.html',
+			chunks: [],
 		}),
-		new HtmlWebpackPlugin({
-			template: path.join(folders.src, 'handle-errors', 'index.html'),
-			filename: 'handle-errors.html',
-			chunks: [ 'handle-errors' ],
-		}),
+		htmlFile('hello-world'),
+		htmlFile('handle-errors'),
+		htmlFile('earthquakes'),
 		new webpack.HotModuleReplacementPlugin(),
 		new webpack.NamedModulesPlugin(),
 		new webpack.SourceMapDevToolPlugin(),
