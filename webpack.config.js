@@ -12,6 +12,7 @@ const folders = {
 module.exports = {
 	entry: {
 		'hello-world': path.resolve(folders.src, 'hello-world', 'hello-world.js'),
+		'handle-errors': path.resolve(folders.src, 'handle-errors', 'handle-errors.js'),
 	},
 	output: {
 		path: folders.dist,
@@ -41,6 +42,11 @@ module.exports = {
 			template: path.join(folders.src, 'hello-world', 'index.html'),
 			filename: 'hello-world.html',
 			chunks: [ 'hello-world' ],
+		}),
+		new HtmlWebpackPlugin({
+			template: path.join(folders.src, 'handle-errors', 'index.html'),
+			filename: 'handle-errors.html',
+			chunks: [ 'handle-errors' ],
 		}),
 		new webpack.HotModuleReplacementPlugin(),
 		new webpack.NamedModulesPlugin(),
