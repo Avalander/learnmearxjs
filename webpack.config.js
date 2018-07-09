@@ -21,6 +21,7 @@ module.exports = {
 		'handle-errors': path.resolve(folders.src, 'handle-errors', 'handle-errors.js'),
 		'earthquakes': path.resolve(folders.src, 'earthquakes', 'earthquakes.js'),
 		'snejk': path.resolve(folders.src, 'snejk', 'snejk.js'),
+		'spaceship': path.resolve(folders.src, 'spaceship', 'spaceship.js'),
 	},
 	output: {
 		path: folders.dist,
@@ -55,6 +56,7 @@ module.exports = {
 		htmlFile('handle-errors'),
 		htmlFile('earthquakes'),
 		htmlFile('snejk'),
+		htmlFile('spaceship'),
 		new webpack.HotModuleReplacementPlugin(),
 		new webpack.NamedModulesPlugin(),
 		new webpack.SourceMapDevToolPlugin(),
