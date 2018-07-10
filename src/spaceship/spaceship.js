@@ -17,7 +17,7 @@ canvas.height = window.innerHeight
 const drawTriangle = makeDrawTriangle(context)
 const paintStars = makePaintStars({ context, width: canvas.width, height: canvas.height })
 const paintSpaceship = makePaintSpaceship(context)
-const paintEnemies = makePaintEnemies(context, canvas.width)
+const paintEnemies = makePaintEnemies(drawTriangle, canvas.width)
 const paintHeroShots = makePaintHeroShots(drawTriangle)
 const renderScene = ([ stars, spaceship, enemies, hero_shots ]) => {
 	paintStars(stars)

@@ -17,11 +17,11 @@ export const makeEnemies$ = ({ width }) =>
 		}, []),
 	)
 
-export const makePaintEnemies = (context, width) => enemies => {
+export const makePaintEnemies = (drawTriangle, width) => enemies => {
 	enemies
 		.map(updateEnemy(width))
 		.forEach(enemy => {
-			drawTriangle({ context, x: enemy.x, y: enemy.y, width: 20, color: '#00ff00', direction: 'down' })
+			drawTriangle({ x: enemy.x, y: enemy.y, width: 20, color: '#00ff00', direction: 'down' })
 		})
 }
 
@@ -38,17 +38,6 @@ const updateEnemy = width => enemy => {
 	if (enemy.x > width - 20) enemy.x = width - 20
 
 	return enemy
-}
-
-const drawTriangle = ({ context, x, y, width, color, direction }) => {
-	const point = direction === 'up' ? y - width : y + width
-	context.fillStyle = color
-	context.beginPath()
-	context.moveTo(x - width, y)
-	context.lineTo(x, point)
-	context.lineTo(x + width, y)
-	context.lineTo(x - width, y)
-	context.fill()
 }
 
 const randInt = (from, to) => Math.floor(Math.random() * (to - from)) + from
