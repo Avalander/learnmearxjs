@@ -1,4 +1,5 @@
 import { combineLatest } from 'rxjs'
+import { sampleTime } from 'rxjs/operators'
 
 import { makeStarfield$, makePaintStars } from './starfield'
 import { makeHero$, makePaintSpaceship } from './hero'
@@ -25,4 +26,7 @@ const hero$ = makeHero$({ width: canvas.width, height: canvas.height, canvas })
 const enemies$ = makeEnemies$({ width: canvas.width })
 
 const game$ = combineLatest(starfield$, hero$, enemies$)
+	.pipe(
+		sampleTime(40),
+	)
 game$.subscribe(renderScene)
