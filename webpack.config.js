@@ -20,7 +20,7 @@ module.exports = {
 		'hello-world': path.resolve(folders.src, 'hello-world', 'hello-world.js'),
 		'handle-errors': path.resolve(folders.src, 'handle-errors', 'handle-errors.js'),
 		'earthquakes': path.resolve(folders.src, 'earthquakes', 'earthquakes.js'),
-		'snejk': path.resolve(folders.src, 'snejk', 'snejk.js'),
+		'snake-clone': path.resolve(folders.src, 'snake-clone', 'main.js'),
 		'spaceship': path.resolve(folders.src, 'spaceship', 'spaceship.js'),
 	},
 	output: {
@@ -55,7 +55,7 @@ module.exports = {
 		htmlFile('hello-world'),
 		htmlFile('handle-errors'),
 		htmlFile('earthquakes'),
-		htmlFile('snejk'),
+		htmlFile('snake-clone'),
 		htmlFile('spaceship'),
 		new webpack.HotModuleReplacementPlugin(),
 		new webpack.NamedModulesPlugin(),
