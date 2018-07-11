@@ -2,9 +2,12 @@ import { init } from 'snabbdom'
 import props from 'snabbdom/modules/props'
 import attributes from 'snabbdom/modules/attributes'
 
+import { combineLatest } from 'rxjs'
+
 import { svg, rect, g } from './svg-helpers'
 
 import background from './background'
+import { makeSnake$, paintSnake } from './snake'
 
 
 const patch = init([
@@ -13,17 +16,14 @@ const patch = init([
 ])
 
 const container = document.querySelector('#content')
+const vnode = svg({ attrs: { viewBox: '0 0 600 300', width: 600, height: 300 }})
+patch(container, vnode)
 
-background({ width: 600, height: 300 }).subscribe(
-	group => {
-		const node = svg({ attrs: { viewBox: '0 0 600 300', width: 600, height: 300 }}, [
-			group,
-			g([
-				rect({ attrs: { x: 10, y: 10, width: 9, height: 9, fill: '#32b184', stroke: '#217558', 'stroke-width': 2 }}),
-				rect({ attrs: { x: 20, y: 10, width: 9, height: 9, fill: '#32b184', stroke: '#217558', 'stroke-width': 2 }}),
-				rect({ attrs: { x: 30, y: 10, width: 9, height: 9, fill: '#32b184', stroke: '#217558', 'stroke-width': 2 }}),
-			])
-		])
-		patch(container, node)
-	}
-)
+const background$ = background({ width: 600, height: 300 })
+const snake$ = makeSnake$({ top: 0, bottom: 300, left: 0, right: 600 })
+
+const game$ = combineLatest(background$, snake$)
+game$.subscribe(actors => {
+	const node = svg({ attrs: { viewBox: '0 0 600 300', width: 600, height: 300 }}, actors)
+	patch(vnode, node)
+})
