@@ -1,13 +1,11 @@
-import { interval, fromEvent, of, combineLatest } from 'rxjs'
+import { interval, fromEvent, combineLatest } from 'rxjs'
 import {
 	distinctUntilChanged,
 	filter,
 	map,
-	sample,
 	sampleTime,
 	scan,
 	startWith,
-	flatMap,
 } from 'rxjs/operators'
 
 import { g, rect } from './svg-helpers'
@@ -25,11 +23,6 @@ export const makeSnake$ = ({ top, bottom, left, right }) =>
 			sampleTime(SPEED),
 			map(([ direction ]) => direction),
 			scan(updateSnake, initSnake()),
-			map(x => {
-				console.log(x[0].x)
-				return x
-			}),
-			map(paintSnake),
 		)
 
 export const paintSnake = snake =>
